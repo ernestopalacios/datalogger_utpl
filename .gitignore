@@ -21,3 +21,11 @@
 *.i*86
 *.x86_64
 *.hex
+
+# PIC-C Compiler files
+
+*.cof
+*.err
+*.esym
+*.lst
+*.sta

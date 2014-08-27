@@ -1,17 +1,17 @@
 [PROJECT]
-Target=datV1.0.HEX
-Development_Mode=2
+Target=datV1.0.hex
+Development_Mode=
 Processor=0x452F
 ToolSuite=CCS
 Processor_Text=PIC18F452
 
 [Directories]
-Include=
+Include=C:\Program Files (x86)\PICC\devices\;C:\Program Files (x86)\PICC\drivers\;C:\Users\DELL\GIT\datalloger_utpl\PIC_18F452;
 Library=
 LinkerScript=
 
 [Target Data]
-FileList=C:\Users\Hugo\Desktop\datalogger\software\datV1.0.c
+FileList=C:\Users\DELL\GIT\datalloger_utpl\PIC_18F452\datV1.0.c
 BuildTool=C-COMPILER
 OptionString=+FH
 AdditionalOptionString=
@@ -26,11 +26,31 @@ OptionString=
 AdditionalOptionString=
 
 [mru-list]
-1=DATV10~1.C
+1=datV1.0.c
 
 [Windows]
-0=0000 DATV10~1.C 0 0 796 451 3 0
+0=0000 %S 0 0 796 451 3 0
 
+[defines]
+enabled=0
+D1=
+V1=
+[fileformats]
+forcecoff=0
+debug=4
+error=2
+object=0
+list=0
+scratch=0
+sta=1
+tre=1
+allerrors=1
+allwarnings=1
+stayupne=3
+stayupoe=0
+[Opened Files]
+1=C:\Users\DELL\GIT\datalloger_utpl\PIC_18F452\datV1.0.c
+2=
 [Units]
 Count=1
 1=datV1.0.c (main)
