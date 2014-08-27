@@ -1,0 +1,799 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"NUM",
+				"NUM_RUTAS_ACTIVAS"
+			],
+			[
+				"def",
+				"define"
+			],
+			[
+				"me",
+				"mecanico"
+			],
+			[
+				"num",
+				"num_ruta_sel"
+			],
+			[
+				"numer",
+				"numero_ruta_seleccionada"
+			],
+			[
+				"ruta",
+				"ruta"
+			],
+			[
+				"nume",
+				"numero_ruta_seleccionada"
+			],
+			[
+				"rua",
+				"ruta"
+			],
+			[
+				"MOST",
+				"MOSTRAR_NUM_RUTA_MS"
+			],
+			[
+				"BT",
+				"BT2"
+			],
+			[
+				"TXT",
+				"DELAY_TXT_SERVIDOR"
+			],
+			[
+				"labor",
+				"_laborando"
+			],
+			[
+				"glc",
+				"glcd_clear"
+			],
+			[
+				"glcd_cl",
+				"glcd_clear"
+			],
+			[
+				"bande",
+				"bandera_sms"
+			],
+			[
+				"dei",
+				"define"
+			],
+			[
+				"glcd",
+				"glcd_puts"
+			],
+			[
+				"tx",
+				"txt_glcd_b0"
+			],
+			[
+				"c",
+				"char"
+			],
+			[
+				"rx",
+				"RX_BUFFER_SIZE0"
+			],
+			[
+				"i",
+				"i"
+			],
+			[
+				"DEL",
+				"DELAY_TXT_SERVIDOR"
+			],
+			[
+				"band",
+				"bandera_mostrar_txt"
+			],
+			[
+				"i_txt",
+				"i_txt_glcd"
+			],
+			[
+				"txt",
+				"txt_glcd_b0"
+			],
+			[
+				"btn",
+				"btn5"
+			],
+			[
+				"DELAY",
+				"DELAY_PANTALLA_INI"
+			],
+			[
+				"mi",
+				"minu"
+			],
+			[
+				"DELA",
+				"DELAY_BOTONES_MS"
+			],
+			[
+				"bt",
+				"btn3"
+			],
+			[
+				"ba",
+				"bandera3"
+			],
+			[
+				"ban",
+				"bandera1"
+			],
+			[
+				"boto",
+				"boton4"
+			],
+			[
+				"mes",
+				"mes1"
+			],
+			[
+				"dia",
+				"dia1"
+			],
+			[
+				"se",
+				"seg"
+			],
+			[
+				"min",
+				"min1"
+			],
+			[
+				"h",
+				"hora1"
+			],
+			[
+				"in",
+				"int8"
+			],
+			[
+				"e",
+				"eeprom"
+			],
+			[
+				"an",
+				"an1"
+			],
+			[
+				"NoM",
+				"NOMBRE_DISP"
+			],
+			[
+				"In",
+				"Includes"
+			],
+			[
+				"hora",
+				"hora"
+			],
+			[
+				"seg",
+				"seg1"
+			],
+			[
+				"RX",
+				"RX_BUFFER_SIZE0"
+			],
+			[
+				"GLC",
+				"GLCD_DELAY_US"
+			],
+			[
+				"delay",
+				"delay_ms"
+			],
+			[
+				"DE",
+				"DELAY_BUZZER"
+			],
+			[
+				"vel",
+				"vel_leida"
+			],
+			[
+				"ve",
+				"vel_leida"
+			],
+			[
+				"limi",
+				"limite_superior"
+			],
+			[
+				"valo",
+				"valorQRD_nuevo"
+			],
+			[
+				"de",
+				"define"
+			],
+			[
+				"tmr",
+				"tmr1_overflow"
+			],
+			[
+				"bandera",
+				"bandera_impresora"
+			],
+			[
+				"le",
+				"limite_hojas_impresas"
+			],
+			[
+				"wa",
+				"wait_us"
+			],
+			[
+				"limite",
+				"limite_4"
+			],
+			[
+				"li",
+				"limite_2"
+			],
+			[
+				"buf",
+				"bufferSerial"
+			],
+			[
+				"bu",
+				"bufferSerial"
+			],
+			[
+				"i_",
+				"i_buffGPS"
+			],
+			[
+				"adc",
+				"adc_sensor_viejo"
+			],
+			[
+				"LIMIT",
+				"LIMITE_MIN"
+			],
+			[
+				"ana",
+				"analogRead"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "PIC_18F452/datV1.0.c",
+			"settings":
+			{
+				"buffer_size": 2032,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "PIC_18F452/ds1307.c",
+			"settings":
+			{
+				"buffer_size": 4460,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/C++/C++.sublime-build",
+	"command_palette":
+	{
+		"height": 58.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 191.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/DELL/AppData/Roaming/Sublime Text 3/Packages/HexViewer/Default (Windows).sublime-keymap",
+		"/C/Users/DELL/GIT/glcd_bus/Linker/stdlib.al",
+		"/C/Users/DELL/GIT/glcd_bus/Linker/stdio.al",
+		"/C/Users/DELL/GIT/glcd_bus/Includes/glcd_com_servidor.c",
+		"/C/Users/DELL/GIT/sublime-jsdocs/LICENSE",
+		"/C/Users/DELL/GIT/glcd_bus/SkyPatrol/Tramas.txt",
+		"/C/Users/DELL/GIT/glcd_bus/disp.map",
+		"/C/Users/DELL/GIT/glcd_bus/disp.prj",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/GPS_LOGO_18F2550/main.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/GPS_LOGO_18F2550/LibreriaLogo.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/GPS_LOGO_18F2550/LibreriaLogo.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Kiosko/PROGRAMA PIC KIOSCOS/KSK-01/v1.0.c",
+		"/C/Users/DELL/GIT/glcd_bus/disp.c",
+		"/C/Users/DELL/GIT/glcd_bus/nombres_variables.txt",
+		"/D/Documentos Ernesto/KRADAC_Files/Caja Comun/GLCD VICHE/Disp_prueba/Disp_prueba/Includes/GLCD.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Caja Comun/GLCD VICHE/Disp_prueba/Disp_prueba/Includes/font.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Caja Comun/GLCD VICHE/Disp_prueba/Disp_prueba/Includes/bus.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Caja Comun/GLCD VICHE/Disp_prueba/Disp_prueba/disp.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Caja Comun/GLCD VICHE/Disp1/disp.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/PIC 2550/parqueLCD2.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/PIC 2550/PICpgm Bootloader/bootloader.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/ENCRIPTACION/Crypt_1/XTEA.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/ENCRIPTACION/Crypt_1/crypt_1.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/PIC 2550/PICpgm Bootloader/types.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Parquímetro/PIC 2550/PICpgm Bootloader/bootloader.h",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/D/Documentos Ernesto/KRADAC_Files/Kiosko/PROGRAMA PIC KIOSCOS/KSK-02/v1.0.c",
+		"/C/Users/DELL/Documents/MEGAsync/Proyecto de Tesis/mbed/codigo fuente/DeslizadorUTN_full/setup.h",
+		"/C/Users/DELL/Documents/MEGAsync/Proyecto de Tesis/mbed/codigo fuente/DeslizadorUTN_full/setup.cpp",
+		"/C/Users/DELL/Documents/MEGAsync/Proyecto de Tesis/mbed/codigo fuente/DeslizadorUTN_full/main.cpp",
+		"/C/Users/DELL/Documents/Logica Practica 04.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Kiosko/PROGRAMA PIC KIOSCOS/KSK-04/v1.0.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Datalogger/DAQ_PIC16F876/codigo_fuente_2.1/main_config.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Kiosko/PROGRAMA PIC KIOSCOS/KSK-03/v1.0.c",
+		"/C/Users/DELL/Documents/MEGAsync/CNC Elias/respaldos-mach3/CandCNC_THC/READMEFIRST(really).txt",
+		"/D/Documentos Ernesto/KRADAC_Files/Kiosko/PROGRAMA PIC KIOSCOS/KSK-01/v1.0 (2).c",
+		"/C/Users/DELL/Documents/tesis_26-abrl-2014/qei.cpp",
+		"/D/Documentos Ernesto/KRADAC_Files/Yachay/03 Controles de Acceso/RESPALDOS ACCESOS YACHAY/accesos/listado enrolamiento 29-03-2014",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Diseño Loja 2da etapa/Nuevas intersecciones.txt",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Diseño Loja 2da etapa/intersecciones",
+		"/D/Documentos Ernesto/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/SKY_LOGO_18F2550/main.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Control de Acceso/Esclusas/EXC_ver2-1/codigo_fuente_exc2-1/exc_config.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Control de Acceso/Esclusas/EXC_ver2-1/codigo_fuente_exc2-1/exc_config.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Control de Acceso/Esclusas/EXC_ver2-1/codigo_fuente_exc2-1/exc_21.c",
+		"/D/Documentos Ernesto/UserCard.txt",
+		"/C/Program Files (x86)/701Server/FP00005.FP5",
+		"/D/Documentos Ernesto/KRADAC_Files/Yachay/03 Controles de Acceso/IPs CONTROL DE ACCESOS YACHAY",
+		"/D/Documentos Ernesto/KRADAC_Files/Datalogger/DAQ_PIC16F876/codigo_fuente_2.1/main_config.h",
+		"/D/Documentos Ernesto/KRADAC_Files/Contador de personas/fabrizzio/main_funciona_reportaServidor.c",
+		"/D/Documentos Ernesto/KRADAC_Files/Contador de personas/fabrizzio/main_revisado.c",
+		"/D/Documentos Ernesto/beagleg-master/beagleg-master/gcode-parser.c",
+		"/D/Documentos Ernesto/KRADAC_Files/CLUB ROBOTICA/Exoesqueleto/Libreria AX12 Dinamyxel/AX12.cpp",
+		"/D/Documentos Ernesto/KRADAC_Files/CLUB ROBOTICA/Exoesqueleto/Libreria AX12 Dinamyxel/AX12.h",
+		"/C/Program Files (x86)/701Server/20140314.msg",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/Contador de personas/Tramas contador.txt",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Mano_Robot_v1.2/sketch_oct13a/sketch_oct13a.ino",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/Kiosko/KioscosVirtuales/KioscosVirtuales/MnitorVariablesKiosko/v1.0.c",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino_sensor_brazo_ejemplo/AnalogVisualizationArduino/AnalogVisualizationArduino.ino",
+		"/C/Program Files (x86)/Arduino/libraries/TimerOne-r11/TimerOne.cpp",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Processing (cuatro sensores_juego)/AnalogVisualizationProcessing/thresHolding.pde",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Processing (cuatro sensores_juego)/AnalogVisualizationProcessing/AnalogVisualizationProcessing.pde",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/MuscleSensor_Processing/AnalogVisualizationProcessing/AnalogVisualizationProcessing.pde",
+		"/D/Documentos Ernesto/SEALEA/SaleaeDeviceSdk-1.1.14/SaleaeDeviceSdk-1.1.14/source/ConsoleDemo.cpp",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/MuscleSensor_Processing/AnalogVisualizationProcessing/thresHolding.pde",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/MuscleSensor_Processing/AnalogVisualizationProcessing/thresholdGraph.pde",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino_sensor_brazo_ejemplo/EMG_Beep_ejemplo/EMG_Beep_ejemplo.ino",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino (cuatro sensores_juego)/AnalogVisualizationArduino/applet/HardwareSerial.cpp.o",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino (cuatro sensores_juego)/AnalogVisualizationArduino/applet/_080725_6AnIN.pde",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino (cuatro sensores_juego)/AnalogVisualizationArduino/applet/_080725_6AnIN.cpp",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/Arduino (cuatro sensores_juego)/AnalogVisualizationArduino/applet/WMath.cpp.o",
+		"/C/Users/DELL/Google Drive/KRADAC/KRADAC/CLUB ROBOTICA/Mano Robotica/MuscleSensor_Processing/AnalogVisualizationProcessing/serialEvent.pde",
+		"/D/Documentos Ernesto/K.logger - especificaciones.txt",
+		"/D/Documentos Ernesto/beagleg-master/beagleg-master/send-gcode.c",
+		"/D/Documentos Ernesto/beagleg-master/beagleg-master/gcode-parser.h"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"$",
+			"r",
+			"HEAD",
+			"boton1",
+			"12",
+			"laborando",
+			"boton5",
+			"main",
+			"numero_ruta_seleccionada",
+			"numero_ruta",
+			"num_ruta",
+			"numero_ruta_seleccionada",
+			"num_ruta",
+			"ruta_aux",
+			"glcd_putc",
+			"pantalla|",
+			"glcd",
+			"btn2",
+			"glcd",
+			"pt",
+			"HEAD",
+			"_laborando",
+			"dibujar_senal",
+			"ruta_aux",
+			"pt ",
+			"glcd_",
+			"main",
+			"chofer",
+			"j",
+			"boton",
+			"main",
+			"glcd_putchar",
+			"clear",
+			"btn",
+			"main",
+			"pt = 7",
+			"pt = 7;          // Muestra en mensaje en main()",
+			"TXT_BUF_SZ",
+			"obt",
+			"DELAY_TXT_SERVIDOR",
+			"MOSTRAR_MSN_ENV_MS",
+			"pt7",
+			"bandera_mostrar_txt",
+			"main",
+			"enviar",
+			"if( hora",
+			"HEAD",
+			"temp",
+			"main",
+			"btn2",
+			"calcular_ruta",
+			"bandera4",
+			"bandera3",
+			"btn1",
+			"aceptar",
+			"HEAD",
+			"act",
+			"if(hora",
+			"eeprom",
+			"bandera1",
+			"NUMERO_PANTALLA",
+			"BL",
+			"hora =",
+			"AQUI",
+			"hora ==",
+			"NOMBRE_PANTALLA",
+			"ATMS",
+			"ruta",
+			"+CSQ",
+			"IMPRIME",
+			"min",
+			"minu",
+			"act",
+			"sen",
+			"sen(",
+			"sen",
+			"delay_us",
+			"GLCD_DELAY_US",
+			"delay_us(1);",
+			"n4",
+			" ",
+			"\\n",
+			"\\r",
+			"vel_leida",
+			"abs",
+			"=+",
+			"=-",
+			"ult_vol",
+			"vel",
+			"ult_vel",
+			"valorQRD_nuevo",
+			"valorQ",
+			"dt_",
+			"tmr1_over",
+			"inicioTrama",
+			"enviarEncabezadoSky_REPORTAR",
+			"inicioTrama",
+			"limite_hojas_impresas",
+			"fq_posicion",
+			"'G'",
+			"Adv_Mot",
+			"AdvMot",
+			"while( ",
+			"ISR_Adv",
+			"setH",
+			"set_H",
+			"ReadRPM",
+			"ISR_Adv",
+			"CalculateRPM",
+			"velocidad_rpm",
+			"pin_alm",
+			"write",
+			"write_eeprom",
+			"leerGPS",
+			",",
+			"'",
+			"\"",
+			"set_ang",
+			"read_encoder()"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"num_ruta_sel",
+			"numero_ruta_seleccionada",
+			"pantalla",
+			"pt7",
+			"min",
+			"dibujar_senal(",
+			"barras",
+			"delay_us(GLCD_DELAY_US)",
+			" 0x",
+			"\\n\\r",
+			"",
+			"vel_medida",
+			"k * abs",
+			"+=",
+			"-=",
+			"ult_vout",
+			"vout",
+			"ult_vol",
+			"",
+			"'",
+			"velocidad_rpm()"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "PIC_18F452/datV1.0.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								669,
+								672
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"tab_size": 3,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "PIC_18F452/ds1307.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4460,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								764,
+								764
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "PIC_18F452/datV1.0.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"tab_size": 3,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "PIC_18F452/ds1307.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4460,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 205.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "Datalloger_UTPL.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"disp.c"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 135.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
