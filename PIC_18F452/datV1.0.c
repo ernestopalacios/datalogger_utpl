@@ -3,7 +3,7 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.1.0                       *
+ *  version:      3.1.1                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
@@ -38,8 +38,8 @@
 
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
- #define SEG_DAQ         10        // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         12       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+ #define SEG_DAQ         30        // Tiempo de Adquisicion en segundos 
+ #define SEG_GPS         3600       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
 
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
@@ -64,9 +64,9 @@
    int _comas           = 0;          // Contador de comas para la trama GPRMC
    int _fecha_ok        = 0;
 
-   long _segundos = 0;
-   long _segundos_daq = 0;
-   long _segundos_gps = 0;
+   unsigned long _segundos = 0;
+   unsigned long _segundos_daq = 0;
+   unsigned long _segundos_gps = 0;
 
    
    unsigned int yr     = 0;          // Dos ultimos digitos 20yy
