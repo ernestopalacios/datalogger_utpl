@@ -353,6 +353,7 @@ void main(void)
                   bufferSerial[i] = 0x00;
                
                i_serial = 0;
+               _fecha_ok = 0; // Listo para obtener nueva fecha
 
             }
          }
