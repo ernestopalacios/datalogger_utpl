@@ -3,7 +3,7 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      1.0.1                       *
+ *  version:      1.0.2                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
@@ -29,7 +29,11 @@
 
 #use RS232(BAUD=9600, UART1, PARITY= N, STREAM = COM_int )
 
-//#use rs232(baud=9600,parity=N,xmit=PIN_C6,rcv=PIN_C7,bits=8,STREAM=COM_INT)//Puerto soft skypatrol
+#define  RX_EXT   PIN_B6
+#define  TX_EXT   PIN_B7
+
+//Puerto soft skypatrol
+#use rs232(baud=9600, parity=N, xmit=TX_EXT,rcv=RX_EXT, bits=8, STREAM=COM_EXT)
 
 #include "ds1307.c"
 
@@ -51,10 +55,14 @@ void main(void)
    
    setup_adc(ADC_CLOCK_DIV_32);
    setup_adc_ports(ALL_ANALOG);
+   SET_TRIS_A( 0xFF );
+
+   SET_TRIS_B( 0X7F );
 
    ds1307_init ();             ///se inicializa el ds1307
    delay_ms(1000);
-   SET_TRIS_A( 0xFF );
+
+   fprintf(COM_EXT, "HOLA MUNDO EXTERIOR!!!\n");
 
    while(1)
    {
