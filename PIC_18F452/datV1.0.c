@@ -82,6 +82,19 @@
    char seg1   = 0;
    char seg    = 0;
    
+   // Estructira de datos para la Hora y Fecha del PLC
+   typedef struct {
+      int  dia;
+      int  mes;
+      int  an;
+      int  hora;
+      int  minu;
+      int  segu;
+   } Tiempo;  //Fecha Interno del logo
+
+   Tiempo rtc;
+   Tiempo reloj;
+
    // Variables para alojar las lecturas de los pines analogicos
    long valor_AN0 = 0;
    long valor_AN1 = 0;
@@ -90,6 +103,14 @@
    long valor_AN4 = 0;
    long valor_AN5 = 0;
 
+
+   /**
+    * @brief Iguala la hora del RTC.
+    * @details Toma una estructura de tiempo, fecha y hora y las graba el DS1307
+    * 
+    * @param rtc Estructura de tiempo.
+    */
+   void igualar_rtc( Tiempo& rtc );
 
    #INT_RDA
    void rda_isr()
@@ -222,6 +243,13 @@ void main(void)
 
             seg1 = bufferSerial[ i + 10 ];
             seg  = bufferSerial[ i + 11 ];
+
+            rtc.hora = hora-48 + ( hora1-48 * 10 );
+            rtc.minu = min1-48 + ( minu-48  * 10 );
+            rtc.segu = seg -48 + ( seg1-48  * 10 );
+
+            reloj = rtc;
+            igualar_rtc( rtc );
             
 
             fprintf(COM_EXT, "\r\n HORA: %c%c:%c%c:%c%c \r\n",
@@ -252,10 +280,15 @@ void main(void)
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
 
          output_high( LED_STATUS );
-         delay_ms(1000);
+         delay_ms(250);
          output_low( LED_STATUS );
       }
       
    }
 }
 
+
+void igualar_rtc( Tiempo& rtc )
+{
+   ds1307_set_date_time(rtc.dia, rtc.mes, rtc.an, rtc.an, rtc.hora, rtc.minu, rtc.segu);
+}
