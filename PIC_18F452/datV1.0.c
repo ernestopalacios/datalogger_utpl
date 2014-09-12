@@ -54,10 +54,15 @@
 
    volatile unsigned int i_serial = 0;
    volatile unsigned int i_timer  = 2;
-   volatile unsigned int i = 0;           // Contador para laszos FOR()
+   
+   unsigned int i = 0;           // Contador para lazos FOR()
+   unsigned int j = 0;           // Contador para lazos FOR()
+   unsigned int k = 0;           // Contador para lazos FOR()
    
    int _ovf_serial_0    = 0;            // Bandera para saber si se sobrepaso el buffer
    int _enviar_trama    = 0;           // Bandera para enviar la trama desde MAIN()
+   int _comas           = 0;          // Contador de comas para la trama GPRMC
+   int _fecha_ok        = 0;
 
    long _segundos = 0;
    long _segundos_daq = 0;
@@ -73,15 +78,34 @@
    unsigned int dow    = 0;
 
    // Tiempo desde el GPS
-   char hora1  = 0;
-   char hora   = 0;
+   char c_hora1  = 0;
+   char c_hora   = 0;
 
-   char min1   = 0;
-   char minu   = 0;
+   char c_min1   = 0;
+   char c_minu   = 0;
 
-   char seg1   = 0;
-   char seg    = 0;
+   char c_seg1   = 0;
+   char c_seg    = 0;
    
+   // Fecha del GPS
+   char c_dia1  = 0;
+   char c_dia   = 0;
+
+   char c_mes1   = 0;
+   char c_mes    = 0;
+
+   char c_an1   = 0;
+   char c_an    = 0;
+
+   // Int Hora y Fecha
+   int _hora = 0;
+   int _min  = 0;
+   int _seg  = 0;
+   
+   int _dia = 0;
+   int _mes = 0;
+   int _an  = 0;
+
    // Estructira de datos para la Hora y Fecha del PLC
    typedef struct {
       int  dia;
@@ -220,6 +244,10 @@ void main(void)
    fprintf( COM_EXT, "\n\r             version:  3.1\n\r\n\r" );
 
 
+   // Iguala la hora del PIC con la Hora desde el RTC
+   ds1307_get_date( reloj.dia,  reloj.mes,  reloj.an, reloj.an );
+   ds1307_get_time( reloj.hora, reloj.minu, reloj.segu );
+
    while(1)
    {
       
@@ -237,32 +265,95 @@ void main(void)
                 bufferSerial[ i + 2 ] == 'R' && 
                  bufferSerial[ i + 3 ] == 'M'  )
          {
-               hora1 = bufferSerial[ i + 6 ];
-               hora  = bufferSerial[ i + 7 ];
-
-               min1 = bufferSerial[ i + 8 ];
-               minu = bufferSerial[ i + 9 ];
-
-               seg1 = bufferSerial[ i + 10 ];
-               seg  = bufferSerial[ i + 11 ];
-
-               rtc.hora = hora-48 + ( hora1-48 * 10 );
-               rtc.minu = min1-48 + ( minu-48  * 10 );
-               rtc.segu = seg -48 + ( seg1-48  * 10 );
-
-               reloj = rtc;
-               igualar_rtc( rtc );
                
+               /* Recoje la Hora desde la trama GPRMC */
+                  if (bufferSerial[ i + 16 ] == 'A') 
+                  {
+                     // CHAR
+                     c_hora1 = bufferSerial[ i + 6 ];
+                     c_hora  = bufferSerial[ i + 7 ];
 
-               fprintf(COM_EXT, "\r\n HORA: %c%c:%c%c:%c%c \r\n",
-                                    hora1,hora,
-                                      min1, minu,
-                                       seg1, seg );
+                     c_min1 = bufferSerial[ i + 8 ];
+                     c_minu = bufferSerial[ i + 9 ];
+
+                     c_seg1 = bufferSerial[ i + 10 ];
+                     c_seg  = bufferSerial[ i + 11 ];
+
+                     // INT
+                     _hora = c_hora - 48 + ( c_hora1-48 ) * 10 ;
+                     _min  = c_minu - 48 + ( c_min1 -48 ) * 10 ; 
+                     _seg  = c_seg  - 48 + ( c_seg1 -48 ) * 10 ; 
+
+                     // Comprueba que la hora sea la adecuada
+                     if (_hora < 23 && _min < 60 && _seg < 60)
+                     {
+                        rtc.hora = _hora;
+                        rtc.minu = _min;
+                        rtc.segu = _seg ;
+                        
+                     }
+
+                     fprintf(COM_EXT, "\r\n HORA: %02d:%02d:%02d\r\n",
+                                                 _hora,_min,_seg );
+                  }else{
+
+                     fprintf(COM_EXT, "\r\n TRAMA GPS INVALIDA \r\n");
+                     
+                  }
+
+               /* BUSCAR LA FECHA */
+                  _comas = 0;
+                  for (j = i; j < BUFF_SER_0; ++j)          // Recorrer el Buffer desde la trama GPRMC
+                  {
+                     if ( bufferSerial[j] == ',')          // Contar las COMAS ','
+                        _comas++;
+
+                     // Recojer la Fecha en la COMA #9
+                     if ( _comas == 9 && _fecha_ok == 0 )                  
+                     {
+                        
+                        _fecha_ok = 1;
+
+                        // CHAR
+                        c_dia1  = bufferSerial[ j + 1 ];
+                        c_dia   = bufferSerial[ j + 2 ];
+
+                        c_mes1  = bufferSerial[ j + 3 ];
+                        c_mes   = bufferSerial[ j + 4 ];
+
+                        c_an1   = bufferSerial[ j + 5 ];
+                        c_an    = bufferSerial[ j + 6 ];
+
+                        //INT
+                        _dia   = c_dia-48 + ( c_dia1-48 ) * 10 ;
+                        _mes   = c_mes-48 + ( c_mes1-48 ) * 10 ;
+                        _an    = c_an -48 + ( c_an1 -48 ) * 10 ;
+
+
+                        if ( _dia < 32 && _mes < 13 )   // Comprueba que la fecha sea adecuada
+                        {
+                           rtc.dia = _dia;
+                           rtc.mes = _mes;
+                           rtc.an  = _an;
+                        }
+
+                        fprintf(COM_EXT, " FECHA: %02d:%02d:20%02d\r\n",
+                                                  _dia,_mes,_an );
+
+                        reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
+                        igualar_rtc( rtc );     // Iguala el RTC a la hora del GPS
+                     
+                     }
+                     
+                  }
+
+
                // Limpiar el Buffer
-               for (i = 0; i < BUFF_SER_0; ++i)
+               for (j = 0; j < BUFF_SER_0; ++j)
                   bufferSerial[i] = 0x00;
                
                i_serial = 0;
+
             }
          }
 
