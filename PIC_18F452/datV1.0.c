@@ -284,17 +284,6 @@ void main(void)
                      _min  = c_minu - 48 + ( c_min1 -48 ) * 10 ; 
                      _seg  = c_seg  - 48 + ( c_seg1 -48 ) * 10 ; 
 
-                     // Comprueba que la hora sea la adecuada
-                     if (_hora < 23 && _min < 60 && _seg < 60)
-                     {
-                        rtc.hora = _hora;
-                        rtc.minu = _min;
-                        rtc.segu = _seg ;
-                        
-                     }
-
-                     fprintf(COM_EXT, "\r\n HORA: %02d:%02d:%02d\r\n",
-                                                 _hora,_min,_seg );
                   }else{
 
                      fprintf(COM_EXT, "\r\n TRAMA GPS INVALIDA \r\n");
@@ -324,24 +313,75 @@ void main(void)
                         c_an1   = bufferSerial[ j + 5 ];
                         c_an    = bufferSerial[ j + 6 ];
 
-                        //INT
+                        //INT - Hora y Fecha en UTC
                         _dia   = c_dia-48 + ( c_dia1-48 ) * 10 ;
                         _mes   = c_mes-48 + ( c_mes1-48 ) * 10 ;
                         _an    = c_an -48 + ( c_an1 -48 ) * 10 ;
 
 
-                        if ( _dia < 32 && _mes < 13 )   // Comprueba que la fecha sea adecuada
-                        {
-                           rtc.dia = _dia;
-                           rtc.mes = _mes;
-                           rtc.an  = _an;
-                        }
+                        /***  AQUI SE RESTAN LAS 5 HORAS DE ECUADOR DE UTC  ***/
 
-                        fprintf(COM_EXT, " FECHA: %02d:%02d:20%02d\r\n",
-                                                  _dia,_mes,_an );
+                           if ( _hora <= 5 )   // Las primeras cuatro horas del dia
+                           {
+                              _hora += 24;   // Agregarle un dia
+                              _hora -=  5;  // Restarle las 5 horas de ECU-UTC
 
-                        reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
-                        igualar_rtc( rtc );     // Iguala el RTC a la hora del GPS
+                              if ( _dia == 1) // Si tambien es el primer dia del mes
+                              {
+                                 if ( _mes == 1 )  //Ajuste para el 01 Enero de cualquier año
+                                 {
+                                    _an--; // Regresar al anio anterior por las siguientes 5 horas
+                                    _mes = 12;   //Diciembre
+                                    _dia = 31;   //31
+                                 }
+                                 else if ( _mes == 3 ) // Si es marzo y debe volver a febrero // Fuck Leap Year!
+                                 {
+                                    _dia = 28;
+                                    _mes = 2;
+                                 }
+                                 else if ( _mes % 2 == 1 )  // Es un mes impar
+                                 {  
+                                    _dia = 30;   // Pasa al dia anterior
+                                    _mes--;     // Regresa un mes
+                                 
+                                 }else{           // Es un mes par
+                                    _dia = 31;
+                                    _mes--;
+                                 }
+
+                              }else{ // Cualquier otro de los demas dias
+                                 _dia--;
+                              }
+                           }else{
+                              _hora -= 5;
+                           }
+
+                           // Comprueba que la hora sea la adecuada
+                           if (_hora < 23 && _min < 60 && _seg < 60)
+                           {
+                              rtc.hora = _hora;
+                              rtc.minu = _min;
+                              rtc.segu = _seg ;
+                              
+                           }
+
+                           // Comprueba que la fecha sea la adecuada. Asume que el anio esta bien
+                           if ( _dia < 32 && _mes < 13 )   // Comprueba que la fecha sea adecuada
+                           {
+                              rtc.dia = _dia;
+                              rtc.mes = _mes;
+                              rtc.an  = _an;
+                           }
+
+                           reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
+                           igualar_rtc( rtc );     // Iguala el RTC a la hora del GPS
+
+                           fprintf(COM_EXT, "\r\n HORA:  %02d:%02d:%02d\r\n",
+                                                       _hora,_min,_seg );
+
+                           fprintf(COM_EXT,     " FECHA: %02d:%02d:20%02d\r\n",
+                                                     _dia,_mes,_an );
+                        
                      
                      }
                      
@@ -365,13 +405,10 @@ void main(void)
       {
          _enviar_trama = 0;
 
-         ds1307_get_date (day, month, yr, dow);  /// se obtiene la fecha
-         ds1307_get_time (hrs, min, sec);
-         
          fprintf(COM_UART,"AT$MSGSND=4,\"");
          fprintf(COM_UART, "#PT01,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,999$\"\n\r"
-                                   yr,month, day, 
-                                             hrs, min, sec, 
+                                   reloj.an, reloj.mes, reloj.dia, 
+                                             reloj.hora, reloj.minu, reloj.segu, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
 
          output_high( LED_STATUS );
