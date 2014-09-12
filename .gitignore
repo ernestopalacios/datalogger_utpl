@@ -29,3 +29,6 @@
 *.esym
 *.lst
 *.sta
+*.sym
+*.tre
+*.SDF
