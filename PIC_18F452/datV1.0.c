@@ -224,46 +224,49 @@ void main(void)
    {
       
       // Capturar Trama GPS
-      for (i = 0; i < BUFF_SER_0; ++i)
+      if ( bufferSerial[ i_serial - 2 ] == 0x0D &&
+            bufferSerial[ i_serial - 1 ] == 0x0A  ) //  Detecta el ENTER / Carriage Return
       {
+      
+         for (i = 0; i < BUFF_SER_0; ++i)
+         {
          
          // Obtener TRAMA GPS
          if ( bufferSerial[ i + 0 ] == 'G' &&
                bufferSerial[ i + 1 ] == 'P' && 
                 bufferSerial[ i + 2 ] == 'R' && 
-                 bufferSerial[ i + 3 ] == 'M' &&
-
-            i_serial > 70 )
+                 bufferSerial[ i + 3 ] == 'M'  )
          {
-            hora1 = bufferSerial[ i + 6 ];
-            hora  = bufferSerial[ i + 7 ];
+               hora1 = bufferSerial[ i + 6 ];
+               hora  = bufferSerial[ i + 7 ];
 
-            min1 = bufferSerial[ i + 8 ];
-            minu = bufferSerial[ i + 9 ];
+               min1 = bufferSerial[ i + 8 ];
+               minu = bufferSerial[ i + 9 ];
 
-            seg1 = bufferSerial[ i + 10 ];
-            seg  = bufferSerial[ i + 11 ];
+               seg1 = bufferSerial[ i + 10 ];
+               seg  = bufferSerial[ i + 11 ];
 
-            rtc.hora = hora-48 + ( hora1-48 * 10 );
-            rtc.minu = min1-48 + ( minu-48  * 10 );
-            rtc.segu = seg -48 + ( seg1-48  * 10 );
+               rtc.hora = hora-48 + ( hora1-48 * 10 );
+               rtc.minu = min1-48 + ( minu-48  * 10 );
+               rtc.segu = seg -48 + ( seg1-48  * 10 );
 
-            reloj = rtc;
-            igualar_rtc( rtc );
-            
+               reloj = rtc;
+               igualar_rtc( rtc );
+               
 
-            fprintf(COM_EXT, "\r\n HORA: %c%c:%c%c:%c%c \r\n",
-                                 hora1,hora,
-                                   min1, minu,
-                                    seg1, seg );
-            // Limpiar el Buffer
-            for (i = 0; i <= BUFF_SER_0; ++i)
-               bufferSerial[i] = 0x00;
-            
-            i_serial = 0;
+               fprintf(COM_EXT, "\r\n HORA: %c%c:%c%c:%c%c \r\n",
+                                    hora1,hora,
+                                      min1, minu,
+                                       seg1, seg );
+               // Limpiar el Buffer
+               for (i = 0; i < BUFF_SER_0; ++i)
+                  bufferSerial[i] = 0x00;
+               
+               i_serial = 0;
+            }
          }
-      }
 
+      }
 
       // Enviar Trama al GPS
       if ( _enviar_trama == 1 )
