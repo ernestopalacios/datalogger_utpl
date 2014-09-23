@@ -3,15 +3,15 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.1.1                       *
+ *  version:      5.2.1                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
  *
  *                                        
- *                                          
+ *  + Programacion para SKYPATROL tt8750+   
  *                                               
- *                                                     
+ *  + Se define a traves de un #DEFINE                                                   
  *
  *                                 
  *
@@ -36,10 +36,16 @@
 #use rs232(baud=9600, parity=N, xmit=TX_EXT,rcv=RX_EXT, bits=8, STREAM=COM_EXT)
 
 
+//////////////   AQUI SE DEFINE EL EQUIPO CON EL CUAL SE TRABAJA ////
+//
+// En caso de que se desee trabajar con el Skypatrol Anterior se debe
+// comentar la siguiente linea y volver a compilar!
+#define TT8750
+
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
- #define SEG_DAQ         30        // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         3600       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+ #define SEG_DAQ         7         // Tiempo de Adquisicion en segundos 
+ #define SEG_GPS         13       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
 
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
@@ -54,6 +60,7 @@
 
    volatile unsigned int i_serial = 0;
    volatile unsigned int i_timer  = 2;
+   volatile char c_serial = 0;
    
    unsigned int i = 0;           // Contador para lazos FOR()
    unsigned int j = 0;           // Contador para lazos FOR()
@@ -141,8 +148,12 @@
    {
       if ( kbhit( COM_UART ) )
       {
-         bufferSerial[ i_serial++ ] = fgetc( COM_UART );
          
+         c_serial = fgetc( COM_UART );
+         bufferSerial[ i_serial++ ] = c_serial;
+
+         fputc( c_serial, COM_EXT);
+
          if( i_serial > BUFF_SER_0 )
          {
             i_serial      = 0;
@@ -179,8 +190,15 @@ void ISR_RTCC(void)
 
    if ( _segundos_gps == SEG_GPS )
    {
+      _segundos_gps = 0;
+
       //Peticion de Trama GPS para igualar el RTC
-      fprintf(COM_UART, "AT$GPSRD=10\r\n");
+      
+      #ifdef TT8750_PLUS
+         fprintf(COM_UART, "AT$TTGPSQRY=10,0\n\r");
+      #else
+         fprintf(COM_UART, "AT$GPSRD=10\r\n");
+      #endif
    }
 
    if ( _segundos_daq == SEG_DAQ )
@@ -190,27 +208,27 @@ void ISR_RTCC(void)
       // Actualizar las variables y levantar la bandera para iniciar 
       // comunicacion
       set_adc_channel( 0 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN0 = read_adc();
 
       set_adc_channel( 1 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN1 = read_adc();
       
       set_adc_channel( 2 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN2 = read_adc();
 
       set_adc_channel( 3 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN3 = read_adc();
 
       set_adc_channel( 4 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN4 = read_adc();
 
       set_adc_channel( 5 );
-      delay_ms(10);
+      delay_ms(5);
       valor_AN5 = read_adc();
 
       _enviar_trama = 1;
@@ -241,7 +259,7 @@ void main(void)
    fprintf( COM_EXT, "\n\r *****************************************" );
    fprintf( COM_EXT, "\n\r    KRADAC Robotics  |  Loja - Ecuador" );
    fprintf( COM_EXT, "\n\r     www.kradac.com  |  Cel: 0991898859" );
-   fprintf( COM_EXT, "\n\r             version:  3.1\n\r\n\r" );
+   fprintf( COM_EXT, "\n\r             version:  3.3\n\r\n\r" );
 
 
    // Iguala la hora del PIC con la Hora desde el RTC
@@ -252,19 +270,23 @@ void main(void)
    {
       
       // Capturar Trama GPS
-      if ( bufferSerial[ i_serial - 2 ] == 0x0D &&
-            bufferSerial[ i_serial - 1 ] == 0x0A  ) //  Detecta el ENTER / Carriage Return
+      if ( bufferSerial[ i_serial - 2 ] == '\r' &&
+            bufferSerial[ i_serial - 1 ] == '\n' &&
+             i_serial > 4  ) //  Detecta el ENTER / Carriage Return
       {
       
-         for (i = 0; i < BUFF_SER_0; ++i)
+         fprintf(COM_EXT, "\r\n Fin de Trama Obtenida\r\n");
+
+         for (i = 0; i < i_serial; ++i)
          {
          
-         // Obtener TRAMA GPS
-         if ( bufferSerial[ i + 0 ] == 'G' &&
-               bufferSerial[ i + 1 ] == 'P' && 
-                bufferSerial[ i + 2 ] == 'R' && 
-                 bufferSerial[ i + 3 ] == 'M'  )
-         {
+            // Obtener TRAMA GPS
+            if ( bufferSerial[ i + 0 ] == 'G' &&
+                  bufferSerial[ i + 1 ] == 'P' && 
+                   bufferSerial[ i + 2 ] == 'R' && 
+                    bufferSerial[ i + 3 ] == 'M'  )
+            {
+
                
                /* Recoje la Hora desde la trama GPRMC */
                   if (bufferSerial[ i + 16 ] == 'A') 
@@ -284,94 +306,89 @@ void main(void)
                      _min  = c_minu - 48 + ( c_min1 -48 ) * 10 ; 
                      _seg  = c_seg  - 48 + ( c_seg1 -48 ) * 10 ; 
 
-                  }else{
+                  /* BUSCAR LA FECHA */
+                     _comas = 0;
 
-                     fprintf(COM_EXT, "\r\n TRAMA GPS INVALIDA \r\n");
-                     
-                  }
-
-               /* BUSCAR LA FECHA */
-                  _comas = 0;
-                  for (j = i; j < BUFF_SER_0; ++j)          // Recorrer el Buffer desde la trama GPRMC
-                  {
-                     if ( bufferSerial[j] == ',')          // Contar las COMAS ','
-                        _comas++;
-
-                     // Recojer la Fecha en la COMA #9
-                     if ( _comas == 9 && _fecha_ok == 0 )                  
+                     for (j = i; j < BUFF_SER_0; ++j)          // Recorrer el Buffer desde la trama GPRMC
                      {
-                        
-                        _fecha_ok = 1;
+                        if ( bufferSerial[j] == ',')          // Contar las COMAS ','
+                           _comas++;
 
-                        // CHAR
-                        c_dia1  = bufferSerial[ j + 1 ];
-                        c_dia   = bufferSerial[ j + 2 ];
+                        // Recojer la Fecha en la COMA #9
+                        if ( _comas == 9 && _fecha_ok == 0 )                  
+                        {
+                           
+                           _fecha_ok = 1;
 
-                        c_mes1  = bufferSerial[ j + 3 ];
-                        c_mes   = bufferSerial[ j + 4 ];
+                           // CHAR
+                           c_dia1  = bufferSerial[ j + 1 ];
+                           c_dia   = bufferSerial[ j + 2 ];
 
-                        c_an1   = bufferSerial[ j + 5 ];
-                        c_an    = bufferSerial[ j + 6 ];
+                           c_mes1  = bufferSerial[ j + 3 ];
+                           c_mes   = bufferSerial[ j + 4 ];
 
-                        //INT - Hora y Fecha en UTC
-                        _dia   = c_dia-48 + ( c_dia1-48 ) * 10 ;
-                        _mes   = c_mes-48 + ( c_mes1-48 ) * 10 ;
-                        _an    = c_an -48 + ( c_an1 -48 ) * 10 ;
+                           c_an1   = bufferSerial[ j + 5 ];
+                           c_an    = bufferSerial[ j + 6 ];
+
+                           //INT - Hora y Fecha en UTC
+                           _dia   = c_dia-48 + ( c_dia1-48 ) * 10 ;
+                           _mes   = c_mes-48 + ( c_mes1-48 ) * 10 ;
+                           _an    = c_an -48 + ( c_an1 -48 ) * 10 ;
 
 
-                        /***  AQUI SE RESTAN LAS 5 HORAS DE ECUADOR DE UTC  ***/
+                           /***  AQUI SE RESTAN LAS 5 HORAS DE ECUADOR DE UTC  ***/
 
-                           if ( _hora <= 5 )   // Las primeras cuatro horas del dia
-                           {
-                              _hora += 24;   // Agregarle un dia
-                              _hora -=  5;  // Restarle las 5 horas de ECU-UTC
-
-                              if ( _dia == 1) // Si tambien es el primer dia del mes
+                              if ( _hora <= 5 )   // Las primeras cuatro horas del dia
                               {
-                                 if ( _mes == 1 )  //Ajuste para el 01 Enero de cualquier año
-                                 {
-                                    _an--; // Regresar al anio anterior por las siguientes 5 horas
-                                    _mes = 12;   //Diciembre
-                                    _dia = 31;   //31
-                                 }
-                                 else if ( _mes == 3 ) // Si es marzo y debe volver a febrero // Fuck Leap Year!
-                                 {
-                                    _dia = 28;
-                                    _mes = 2;
-                                 }
-                                 else if ( _mes % 2 == 1 )  // Es un mes impar
-                                 {  
-                                    _dia = 30;   // Pasa al dia anterior
-                                    _mes--;     // Regresa un mes
-                                 
-                                 }else{           // Es un mes par
-                                    _dia = 31;
-                                    _mes--;
-                                 }
+                                 _hora += 24;   // Agregarle un dia
+                                 _hora -=  5;  // Restarle las 5 horas de ECU-UTC
 
-                              }else{ // Cualquier otro de los demas dias
-                                 _dia--;
+                                 if ( _dia == 1) // Si tambien es el primer dia del mes
+                                 {
+                                    if ( _mes == 1 )  //Ajuste para el 01 Enero de cualquier año
+                                    {
+                                       _an--; // Regresar al anio anterior por las siguientes 5 horas
+                                       _mes = 12;   //Diciembre
+                                       _dia = 31;   //31
+                                    }
+                                    else if ( _mes == 3 ) // Si es marzo y debe volver a febrero // Fuck Leap Year!
+                                    {
+                                       _dia = 28;
+                                       _mes = 2;
+                                    }
+                                    else if ( _mes % 2 == 1 )  // Es un mes impar
+                                    {  
+                                       _dia = 30;   // Pasa al dia anterior
+                                       _mes--;     // Regresa un mes
+                                    
+                                    }else{           // Es un mes par
+                                       _dia = 31;
+                                       _mes--;
+                                    }
+
+                                 }else{ // Cualquier otro de los demas dias
+                                    _dia--;
+                                 }
+                              }else{
+                                 _hora -= 5;
                               }
-                           }else{
-                              _hora -= 5;
-                           }
 
-                           // Comprueba que la hora sea la adecuada
-                           if (_hora < 23 && _min < 60 && _seg < 60)
-                           {
-                              rtc.hora = _hora;
-                              rtc.minu = _min;
-                              rtc.segu = _seg ;
-                              
-                           }
+                              // Comprueba que la hora sea la adecuada
+                              if (_hora < 23 && _min < 60 && _seg < 60)
+                              {
+                                 rtc.hora = _hora;
+                                 rtc.minu = _min;
+                                 rtc.segu = _seg ;
+                                 
+                              }
 
-                           // Comprueba que la fecha sea la adecuada. Asume que el anio esta bien
-                           if ( _dia < 32 && _mes < 13 )   // Comprueba que la fecha sea adecuada
-                           {
-                              rtc.dia = _dia;
-                              rtc.mes = _mes;
-                              rtc.an  = _an;
-                           }
+                              // Comprueba que la fecha sea la adecuada. Asume que el anio esta bien
+                              if ( _dia < 32 && _mes < 13 )   // Comprueba que la fecha sea adecuada
+                              {
+                                 rtc.dia = _dia;
+                                 rtc.mes = _mes;
+                                 rtc.an  = _an;
+                              }
 
                            reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
                            igualar_rtc( rtc );     // Iguala el RTC a la hora del GPS
@@ -381,22 +398,26 @@ void main(void)
 
                            fprintf(COM_EXT,     " FECHA: %02d:%02d:20%02d\r\n",
                                                      _dia,_mes,_an );
-                        
-                     
+                        }
                      }
                      
+                  }else{
+
+                     fprintf(COM_EXT, "\r\n TRAMA GPS INVALIDA \r\n");
+                     
                   }
-
-
-               // Limpiar el Buffer
-               for (j = 0; j < BUFF_SER_0; ++j)
-                  bufferSerial[i] = 0x00;
-               
-               i_serial = 0;
-               _fecha_ok = 0; // Listo para obtener nueva fecha
-
+                  
             }
+
          }
+
+         // Limpiar el Buffer
+         for (j = 0; j < BUFF_SER_0; ++j)
+            bufferSerial[j] = 0x00;
+         
+         i_serial  = 0;
+         _fecha_ok = 0; // Listo para obtener nueva fecha
+
 
       }
 
