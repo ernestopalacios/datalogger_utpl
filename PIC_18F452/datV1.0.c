@@ -44,8 +44,8 @@
 
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
- #define SEG_DAQ         7         // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         5       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+ #define SEG_DAQ         30         // Tiempo de Adquisicion en segundos 
+ #define SEG_GPS         3600       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
 
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
@@ -437,7 +437,7 @@ void main(void)
          _enviar_trama = 0;
 
          fprintf(COM_UART,"AT$MSGSND=4,\"");
-         fprintf(COM_UART, "#PT01,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,999$\"\n\r"
+         fprintf(COM_UART, "#PT02,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,999$\"\n\r"
                                    reloj.an, reloj.mes, reloj.dia, 
                                              reloj.hora, reloj.minu, reloj.segu, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);

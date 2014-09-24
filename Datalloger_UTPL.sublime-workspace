@@ -4,6 +4,50 @@
 		"selected_items":
 		[
 			[
+				"COM",
+				"COM_EXT"
+			],
+			[
+				"c",
+				"c_serial"
+			],
+			[
+				"i_",
+				"i_serial"
+			],
+			[
+				"_seg",
+				"_segundos_gps"
+			],
+			[
+				"dia",
+				"_dia"
+			],
+			[
+				"_hora",
+				"_hora_ecuador"
+			],
+			[
+				"hora",
+				"_hora"
+			],
+			[
+				"_ho",
+				"_hora_ecuador"
+			],
+			[
+				"comas",
+				"_comas"
+			],
+			[
+				"seg",
+				"segu"
+			],
+			[
+				"ds",
+				"ds1307_get_time"
+			],
+			[
 				"se",
 				"segu"
 			],
@@ -28,24 +72,12 @@
 				"COM_EXT"
 			],
 			[
-				"COM",
-				"COM_UART"
-			],
-			[
 				"SEG",
 				"SEG_GPS"
 			],
 			[
 				"_se",
 				"_segundos_gps"
-			],
-			[
-				"i_",
-				"i_timer"
-			],
-			[
-				"hora",
-				"hora1"
 			],
 			[
 				"COM_e",
@@ -136,10 +168,6 @@
 				"txt_glcd_b0"
 			],
 			[
-				"c",
-				"char"
-			],
-			[
 				"rx",
 				"RX_BUFFER_SIZE0"
 			],
@@ -200,10 +228,6 @@
 				"mes1"
 			],
 			[
-				"dia",
-				"dia1"
-			],
-			[
 				"h",
 				"hora1"
 			],
@@ -226,10 +250,6 @@
 			[
 				"In",
 				"Includes"
-			],
-			[
-				"seg",
-				"seg1"
 			],
 			[
 				"RX",
@@ -315,7 +335,7 @@
 			"file": "PIC_18F452/datV1.0.c",
 			"settings":
 			{
-				"buffer_size": 8042,
+				"buffer_size": 14573,
 				"line_ending": "Windows"
 			}
 		},
@@ -344,6 +364,25 @@
 			}
 		},
 		{
+			"contents": "01 {FB}{00}{01}  //01  \n{01}{FB}{01}{04}  //04\n{01}{FB}{02}{0D}  //13\n{01}{FB}{04}{10}  //16\n{01}{FB}{03}{38}  //56\n{01}{FB}{05}{38}  //56\n{01}{43}{00}{00}\n{01}{43}{00}{00}\n{00}{00}\n\n\n\n{01}{FB}{00}{01}\n{01}{FB}{01}{04}\n{01}{FB}{02}{0D}\n{01}{FB}{04}{11}  // 17\n{01}{FB}{03}{22}  // 34\n{01}{FB}{05}{02}  // Lunes\n{01}{43}{00}{00}  //\n{01}{43}{00}{00}{00}{00}\n\n\n{55}{12}{12}{AA}  //PLC STOP\n{01}{FB}{00}{02}  // 02\n{01}{FB}{01}{04}  // Febrero\n{01}{FB}{02}{0D}  // 2013\n{01}{FB}{04}{FC}  // 252   03\n{01}{FB}{03}{0F}  // 15\n{01}{FB}{05}{03}  // Martes\n{01}{43}{00}{00}  // Guardar\n{55}{18}{18}{AA}  // PLC_Run\n\n\n{55}{12}{12}{AA}  // Stop\n{01}{FB}{00}{01}  // 01\n{01}{FB}{01}{04}  // Abril\n{01}{FB}{02}{0D}  //2013\n{01}{FB}{04}{14}   // 20\n{01}{FB}{03}{25}   // 37\n{01}{FB}{05}{02}   // Martes\n{01}{43}{00}{00}   // Grabar\n{55}{18}{18}{AA}    // PLC RUN\n\n\n 55 12 12 AA \n 01 00 FF FB 00 02  // 2\n 01 00 FF FB 01 04  // Marzo\n 01 00 FF FB 02 0D  // 2013\n 01 00 FF FB 04 0E  // 14\n 01 00 FF FB 03 1B  // 27\n 01 00 FF FB 05 03  // Miercoles\n 01 00 FF 43 \n 55 18 18 AA \n\n\n\n\n\nQ_BYTE = 41 \n\n  -->Salida PLC 0 = 1 \n\n  -->Salida PLC 1 = 0 \n\n  -->Salida PLC 2 = 0 \n\n  -->Salida PLC 3 = 0 \n\n  -->Salida PLC 4 = 0 \n\n  -->Salida PLC 5 = 0 \n\n  -->Salida PLC 6 = 1 \n\n  -->Salida PLC 7 = 0 \n\n\n   ****  Cambio de Fase:  Verde Principal   ****\nAT$MSGSND=4,\"#SMF001,VP1,RP1,VS0,RS0,F0$\"\n\nPRMC,194926.00,A,0359.279205,S,07911.931152,W,0.0,239.9,030413,1.0,E,A*39\n\n$GPRMC,010203.00,A,0359.279205,S,07911.931152,W,0.0,239.9,030413,1.0,E,A*39\n\n$GPRMC,164314.00,A,0358.87276,S,07912.19364,W,7.219,98.46,110814,,,A*51]\n\n$GPRMC,170110.00,A,0357.57287,S,07915.11424,W,0.000,0.0,110814,,,A*5C]\n\n$GPRMC,010110.00,A,0357.57287,S,07915.11424,W,0.000,0.0,110814,,,A*5C]\n\n$GPRMC,010110.00,A,0357.57287,S,07915.11424,W,0.000,0.0,010114,,,A*5C]\n\n-----------\n$ GPRMC,050242.00,A,0358.59276,S,07913.68021,W,0.000,0.0,110814,,,D*58]  //5.AM\n\n$GPRMC,184025.00,A,0356.89995,S,07913.36369,W,0.000,0.0,110814,,,D*58\n\nOK\n\n\n{55}{12}{12}{AA}\n{01}{FB}{00}{03}\n{01}{FB}{01}{04}\n{01}{FB}{02}{0D}\n{01}{FB}{03}{1D}\n{01}{FB}{04}{0F}\n{01}{FB}{05}{03}\n{01}{43}{00}{00}\n{55}{18}{18}{AA}\n{55}{18}{18}{AA}\n\n{55}{12}{12}{AA}\n{01}{FB}{00}{03}\n{01}{FB}{01}{04}\n{01}{FB}{02}{0D}\n{01}{FB}{03}{3A}\n{01}{FB}{04}{0F}\n{01}{FB}{05}{03}\n{01}{43}{00}{00}\n{55}{18}{18}{AA}\n\n{55}{12}{12}{AA}\n{01}{FB}{00}{03}\n{01}{FB}{01}{04}\n{01}{FB}{02}{0D}\n{01}{FB}{03}{01}\n{01}{FB}{04}{10}\n{01}{FB}{05}{03}\n{01}{43}{00}{00}\n{55}{18}{18}{AA}\n{55}{13}{13}{00}\n{AA}{00}{55}\n{13}{13}{00}{AA}{00}",
+			"file": "/R/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/apuntes.txt",
+			"file_size": 2264,
+			"file_write_time": 130550273043923563,
+			"settings":
+			{
+				"buffer_size": 2504,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/Ernesto/GIT/glcd_bus/SkyPatrol/skp_2014-08-11.txt",
+			"settings":
+			{
+				"buffer_size": 1707763,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "/R/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/SKY_LOGO_18F2550/LibreriaLogo.c",
 			"settings":
 			{
@@ -357,14 +396,6 @@
 			{
 				"buffer_size": 2657,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/R/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/apuntes.txt",
-			"settings":
-			{
-				"buffer_size": 2051,
-				"line_ending": "Unix"
 			}
 		},
 		{
@@ -412,6 +443,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Ernesto/GIT/glcd_bus/SkyPatrol/Mensajes_SMS_servidor.txt",
+		"/C/Users/Ernesto/GIT/glcd_bus/SkyPatrol/Tramas.txt",
+		"/R/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/Script_falta_modificar.txt",
+		"/C/Users/Ernesto/GIT/glcd_bus/nombres_variables.txt",
+		"/R/KRADAC_Files/ZKSoftware/23032011143804cr10mw_demo&sdk/The example of VC++6.0/ReadMe.txt",
 		"/C/Users/Ernesto/GIT/datalogger_utpl/PIC_18F452/Klogger.c",
 		"/C/Users/DELL/AppData/Roaming/Sublime Text 3/Packages/HexViewer/Default (Windows).sublime-keymap",
 		"/C/Users/DELL/GIT/glcd_bus/Linker/stdlib.al",
@@ -504,6 +540,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"i_serial",
+			"SEG_GPS",
+			"SEG_DAQ",
+			"SEG_GPS",
+			"hora",
+			"hrs",
 			"TIEMPO_DAQ",
 			"analizarTramaGPS",
 			"COM_int",
@@ -625,8 +667,7 @@
 			",",
 			"'",
 			"\"",
-			"set_ang",
-			"read_encoder()"
+			"set_ang"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -662,7 +703,7 @@
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": true
 	},
 	"groups":
@@ -677,15 +718,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8042,
+						"buffer_size": 14573,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8038,
-								8038
+								14051,
+								14051
 							]
 						],
 						"settings":
@@ -695,7 +736,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3400.0,
+						"translation.y": 5880.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -714,8 +755,8 @@
 						"selection":
 						[
 							[
-								370,
-								370
+								734,
+								734
 							]
 						],
 						"settings":
@@ -726,7 +767,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 378.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 9,
@@ -759,7 +800,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -782,14 +823,14 @@
 						"settings":
 						{
 							"syntax": "Packages/C Improved/C Improved.tmLanguage",
-							"tab_size": 3,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 7205.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				}
 			]
@@ -804,15 +845,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8042,
+						"buffer_size": 14573,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8040,
-								8040
+								13797,
+								13797
 							]
 						],
 						"settings":
@@ -822,7 +863,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 796.0,
+						"translation.y": 2898.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -852,14 +893,70 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 462.0,
+						"translation.y": 2114.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/R/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/apuntes.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2500,
+								2501
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 924.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
+					"file": "/C/Users/Ernesto/GIT/glcd_bus/SkyPatrol/skp_2014-08-11.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1707763,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1534661,
+								1534743
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 298506.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "/R/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/SKY_LOGO_18F2550/LibreriaLogo.c",
 					"semi_transient": false,
 					"settings":
@@ -871,8 +968,8 @@
 						"selection":
 						[
 							[
-								1617,
-								1838
+								1837,
+								1837
 							]
 						],
 						"settings":
@@ -882,14 +979,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 672.0,
+						"translation.y": 3220.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 7,
 					"file": "/R/KRADAC_Files/Semaforos/LOJA/Estudio Semaforos Loja - sin instaladores/Tarjeta_GPS/SKY_LOGO_18F2550/LibreriaLogo.h",
 					"semi_transient": false,
 					"settings":
@@ -909,11 +1006,11 @@
 						{
 							"syntax": "Packages/C Improved/C Improved.tmLanguage"
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -929,8 +1026,8 @@
 						"selection":
 						[
 							[
-								20116,
-								20116
+								22472,
+								22496
 							]
 						],
 						"settings":
@@ -940,42 +1037,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 8792.0,
+						"translation.y": 9543.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "/R/KRADAC_Files/Semaforos/LOJA/Tarjeta_GPS/apuntes.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2051,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1710,
-								1710
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 252.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "/R/KRADAC_Files/Taxis Ejecutivos/Quito/PROGRAMAS_PIC/Tronco_InterfazGarmin/InterfazGarmin/COM_int.c",
 					"semi_transient": false,
 					"settings":
@@ -1001,7 +1070,7 @@
 						"translation.y": 1821.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -1035,7 +1104,7 @@
 		"cols":
 		[
 			0.0,
-			0.497916666667,
+			0.613541666667,
 			1.0
 		],
 		"rows":
