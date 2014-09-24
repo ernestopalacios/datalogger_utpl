@@ -3,7 +3,7 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      5.2.1                       *
+ *  version:      3.5.1                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
@@ -45,7 +45,7 @@
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
  #define SEG_DAQ         7         // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         13       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+ #define SEG_GPS         5       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
 
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
@@ -203,6 +203,7 @@ void ISR_RTCC(void)
 
    if ( _segundos_daq == SEG_DAQ )
    {
+      output_high( LED_STATUS );
       _segundos_daq = 0;   // Reiniciar contador de segundos para adquisicion
 
       // Actualizar las variables y levantar la bandera para iniciar 
@@ -269,10 +270,11 @@ void main(void)
    while(1)
    {
       
+      
       // Capturar Trama GPS
       if ( bufferSerial[ i_serial - 2 ] == '\r' &&
             bufferSerial[ i_serial - 1 ] == '\n' &&
-             i_serial > 4  ) //  Detecta el ENTER / Carriage Return
+             i_serial > 8  ) //  Detecta el ENTER / Carriage Return
       {
       
          fprintf(COM_EXT, "\r\n Fin de Trama Obtenida\r\n");
@@ -380,6 +382,9 @@ void main(void)
                                  rtc.minu = _min;
                                  rtc.segu = _seg ;
                                  
+                              }else{
+
+                                 fprintf(COM_EXT, "\r\n Hora No Valida!!! \r\n");
                               }
 
                               // Comprueba que la fecha sea la adecuada. Asume que el anio esta bien
@@ -388,6 +393,9 @@ void main(void)
                                  rtc.dia = _dia;
                                  rtc.mes = _mes;
                                  rtc.an  = _an;
+                              }else{
+
+                                 fprintf(COM_EXT, "\r\n Fecha No Valida!!! \r\n");
                               }
 
                            reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
@@ -411,19 +419,21 @@ void main(void)
 
          }
 
+
          // Limpiar el Buffer
          for (j = 0; j < BUFF_SER_0; ++j)
-            bufferSerial[j] = 0x00;
+            bufferSerial[ j ] = 0x00;
          
          i_serial  = 0;
          _fecha_ok = 0; // Listo para obtener nueva fecha
 
-
+         fprintf(COM_EXT, "\r\n BUFFER SERIAL LIMPIO: %d \r\n", i_serial);
       }
 
       // Enviar Trama al GPS
       if ( _enviar_trama == 1 )
       {
+         // output_high( LED_STATUS );  Se enciende en la interrupcion serial
          _enviar_trama = 0;
 
          fprintf(COM_UART,"AT$MSGSND=4,\"");
@@ -432,8 +442,7 @@ void main(void)
                                              reloj.hora, reloj.minu, reloj.segu, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
 
-         output_high( LED_STATUS );
-         delay_ms(250);
+         
          output_low( LED_STATUS );
       }
       
