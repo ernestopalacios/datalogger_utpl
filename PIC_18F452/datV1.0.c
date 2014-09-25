@@ -3,7 +3,7 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.5.1                       *
+ *  version:      3.5.3                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
@@ -13,7 +13,8 @@
  *                                               
  *  + Se define a traves de un #DEFINE                                                   
  *
- *                                 
+ *  IMPORTANTE: El tiempo de pregunta de GPS no debe ser multiplo
+ *  del tiempo de envio de Sensores!!!!                                 
  *
  *                                    
  *                                                
@@ -45,7 +46,8 @@
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
  #define SEG_DAQ         30         // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         3600       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+ #define SEG_GPS         67        // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
+                                    // No deba ser multipo del tiempo de adquisicion
 
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
@@ -57,6 +59,8 @@
 // VARIABLES GLOBALES
 
    char  bufferSerial[ BUFF_SER_0 ];                                // Buffer Serial para UART0
+
+   char ID_Estacion[] = { 'P', 'T', '0', '1', 0x00 };   // Por defecto es la 01
 
    volatile unsigned int i_serial = 0;
    volatile unsigned int i_timer  = 2;
@@ -157,7 +161,7 @@
          if( i_serial > BUFF_SER_0 )
          {
             i_serial      = 0;
-            _ovf_serial_0 = 0;
+            _ovf_serial_0 = 1;
          }
       }
 
@@ -419,7 +423,6 @@ void main(void)
 
          }
 
-
          // Limpiar el Buffer
          for (j = 0; j < BUFF_SER_0; ++j)
             bufferSerial[ j ] = 0x00;
@@ -440,8 +443,8 @@ void main(void)
          ds1307_get_time( reloj.hora, reloj.minu, reloj.segu );
 
          fprintf(COM_UART,"AT$MSGSND=4,\"");
-         fprintf(COM_UART, "#PT02,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r"
-                                   reloj.an, reloj.mes, reloj.dia, 
+         fprintf(COM_UART, "#%s,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r",
+                           ID_Estacion, reloj.an, reloj.mes, reloj.dia, 
                                              reloj.hora, reloj.minu, reloj.segu, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
 
