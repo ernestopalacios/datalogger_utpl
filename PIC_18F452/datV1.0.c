@@ -436,8 +436,11 @@ void main(void)
          // output_high( LED_STATUS );  Se enciende en la interrupcion serial
          _enviar_trama = 0;
 
+         ds1307_get_date( reloj.dia,  reloj.mes,  reloj.an, reloj.an );
+         ds1307_get_time( reloj.hora, reloj.minu, reloj.segu );
+
          fprintf(COM_UART,"AT$MSGSND=4,\"");
-         fprintf(COM_UART, "#PT02,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,999$\"\n\r"
+         fprintf(COM_UART, "#PT02,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r"
                                    reloj.an, reloj.mes, reloj.dia, 
                                              reloj.hora, reloj.minu, reloj.segu, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
