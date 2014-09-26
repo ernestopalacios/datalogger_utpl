@@ -3,19 +3,17 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.5.1                       *
+ *  version:      3.5.4                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
  *
  *                                        
  *  + Programacion para SKYPATROL tt8750+   
- *                                               
  *  + Se define a traves de un #DEFINE                                                   
  *
- *                                 
- *
- *                                    
+ *  + Si cambia la estacion se debe cambiar el
+ *    string y volver a compilar       
  *                                                
  *                                                   
  *
@@ -24,7 +22,7 @@
 
 #include <18f452.h>
 #device  ADC=10
-#fuses   HS, NOWDT,NOLVP, NOPUT, NOPROTECT
+#fuses   HS,NOLVP, NOPUT, NOPROTECT, WDT128
 #use     delay(clock=20M)
 #include "ds1307.c"
 #use RS232(BAUD=9600, UART1, PARITY= N, STREAM = COM_UART )
@@ -44,45 +42,37 @@
 
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
  #define LED_STATUS      PIN_C1     // Led de estado, parpadea cada Adqusición
- #define SEG_DAQ         30         // Tiempo de Adquisicion en segundos 
- #define SEG_GPS         3600       // Pedir Trama de GPS para igualar el Reloj cada ciertos segundos
-
+ #define SEG_DAQ         30         // Envia trama cada 30 segundos. No depende de la hora del PIC solo del timer
+ #define SEG_GPS         7         // Pedir Trama de GPS una vez por minuto en este segundo!
+                                    
  #define BUFF_SER_0      200       // Tamano del buffer serial para UART0 - Hardware
  #define BUFF_SER_1      100      // Tamano del buffer serial externo - Software
 
-
-
-//#define 
+ #define RST_HORA        14     // Hora del dia a la cual se resetea el PIC
+ #define RST_MINU        58
+ #define RST_SEGU        13     // El segundo debe ser menor a 56 !!!
 
 // VARIABLES GLOBALES
 
    char  bufferSerial[ BUFF_SER_0 ];                                // Buffer Serial para UART0
 
+   char ID_Estacion[] = { 'P', 'T', '0', '2', 0x00 };   // Por defecto es la 01
+
    volatile unsigned int i_serial = 0;
-   volatile unsigned int i_timer  = 2;
    volatile char c_serial = 0;
    
    unsigned int i = 0;           // Contador para lazos FOR()
    unsigned int j = 0;           // Contador para lazos FOR()
-   unsigned int k = 0;           // Contador para lazos FOR()
    
    int _ovf_serial_0    = 0;            // Bandera para saber si se sobrepaso el buffer
    int _enviar_trama    = 0;           // Bandera para enviar la trama desde MAIN()
    int _comas           = 0;          // Contador de comas para la trama GPRMC
    int _fecha_ok        = 0;
+   int _rtc_ok          = 0;        // Lectura correcta desde RTC
 
-   unsigned long _segundos = 0;
+   unsigned long _segundos_wdt = 0;
    unsigned long _segundos_daq = 0;
    unsigned long _segundos_gps = 0;
-
-   
-   unsigned int yr     = 0;          // Dos ultimos digitos 20yy
-   unsigned int month  = 0;
-   unsigned int day    = 0;
-   unsigned int hrs    = 0;
-   unsigned int min    = 0;
-   unsigned int sec    = 0;
-   unsigned int dow    = 0;
 
    // Tiempo desde el GPS
    char c_hora1  = 0;
@@ -125,6 +115,7 @@
 
    Tiempo rtc;
    Tiempo reloj;
+   Tiempo test_rtc;
 
    // Variables para alojar las lecturas de los pines analogicos
    long valor_AN0 = 0;
@@ -157,7 +148,7 @@
          if( i_serial > BUFF_SER_0 )
          {
             i_serial      = 0;
-            _ovf_serial_0 = 0;
+            _ovf_serial_0 = 1;
          }
       }
 
@@ -182,28 +173,20 @@ void ISR_RTCC(void)
     */
    set_timer0( 46004 );   // Reinicar el contador de segundos
 
-   _segundos++;
+   _segundos_wdt++;      // WDT
    _segundos_daq++;
    _segundos_gps++;
+   _seg++;           //Tiempo del micro
 
-   //fprintf(COM_EXT, "%Lu\r\n", _segundos );
-
-   if ( _segundos_gps == SEG_GPS )
-   {
-      _segundos_gps = 0;
-
-      //Peticion de Trama GPS para igualar el RTC
-      
-      #ifdef TT8750_PLUS
-         fprintf(COM_UART, "AT$TTGPSQRY=10,0\n\r");
-      #else
-         fprintf(COM_UART, "AT$GPSRD=10\r\n");
-      #endif
-   }
+   //fprintf(COM_EXT, "%Lu\r\n", _segundos_wdt );
 
    if ( _segundos_daq == SEG_DAQ )
    {
       output_high( LED_STATUS );
+
+      if ( _segundos_gps == SEG_GPS )        // Puede ocurrir una colision en el puerto serial
+         _segundos_gps -= 2;                //  Retrasa un par de segundos la peticion de GPS
+      
       _segundos_daq = 0;   // Reiniciar contador de segundos para adquisicion
 
       // Actualizar las variables y levantar la bandera para iniciar 
@@ -235,6 +218,64 @@ void ISR_RTCC(void)
       _enviar_trama = 1;
    }
 
+   if ( _seg == SEG_GPS )
+   {
+      _segundos_gps = 0; // Legacy
+
+      //Peticion de Trama GPS para igualar el RTC
+      
+      #ifdef TT8750_PLUS
+         fprintf(COM_UART, "AT$TTGPSQRY=10,0\r\n");
+      #else
+         fprintf(COM_UART, "AT$GPSRD=10\r\n");
+      #endif
+   }
+
+   if ( _seg > 59 )  // Desborde del segundero
+   {
+      _seg = 0;
+      _min++;
+   }
+
+   if ( _min > 59 )  // Desborde del minutero
+   {
+      _min = 0;
+      _hora++;
+   }
+
+   if ( _hora >23)  // Desborde del horero
+   {
+      _hora = 0;
+      _dia++; 
+   }
+
+   if ( _dia > 31)  // Esperemos q no pase mas allá de un mes sin recibir trama GPS !!!!
+   {
+      _mes++;
+   }
+
+
+   /* ************    REINICIO DEL MICROCONTROLADOR   ************  */
+   // El microncontrlador se resetea cada todos los días a las 03:06:13
+
+   if ( _hora == RST_HORA && _min == RST_MINU && _seg == RST_SEGU )   
+   {
+      
+      write_eeprom( 0x20, 1 ); //Bandera WDT
+
+      write_eeprom( 0x10, _an );
+      write_eeprom( 0x11, _mes );
+      write_eeprom( 0x12, _dia );
+
+      write_eeprom( 0x13, _hora );
+      write_eeprom( 0x14, _min );
+      write_eeprom( 0x15, _seg );
+
+      fprintf(COM_EXT, "\r\n*** RESET POR WDT ***\r\n", );
+      while(1);  //Resetea por WDT pasan 512ms
+      
+   }                       
+    // */
 }
 
 
@@ -260,16 +301,80 @@ void main(void)
    fprintf( COM_EXT, "\n\r *****************************************" );
    fprintf( COM_EXT, "\n\r    KRADAC Robotics  |  Loja - Ecuador" );
    fprintf( COM_EXT, "\n\r     www.kradac.com  |  Cel: 0991898859" );
-   fprintf( COM_EXT, "\n\r             version:  3.3\n\r\n\r" );
+   fprintf( COM_EXT, "\n\r             version:  3.5.4\n\r\n\r" );
 
 
-   // Iguala la hora del PIC con la Hora desde el RTC
-   ds1307_get_date( reloj.dia,  reloj.mes,  reloj.an, reloj.an );
-   ds1307_get_time( reloj.hora, reloj.minu, reloj.segu );
+
+   // REINICIO POR WDT
+   if ( (read_eeprom( 0x21 ) == 0x01) || ( restart_cause() == WDT_TIMEOUT ) )
+   {
+      write_eeprom( 0x21, 0x00 );   //Resetear la bandera WDT
+
+      _an  = read_eeprom( 0x10 );
+      _mes = read_eeprom( 0x11 );
+      _dia = read_eeprom( 0x12 );
+
+      _hora = read_eeprom( 0x13 );
+      _min  = read_eeprom( 0x14 );
+      _seg  = read_eeprom( 0x15 ) + 4;
+
+      fprintf(COM_EXT, "\r\n HORA DESDE WDT \r\n");
+      fprintf(COM_EXT, "\r\n HORA:  %02d:%02d:%02d\r\n",
+                                                       _hora,_min,_seg );
+      fprintf(COM_EXT,     " FECHA: %02d:%02d:20%02d\r\n",
+                                _dia,_mes,_an );
+
+   }else{
+
+      // Iguala la hora del PIC con la Hora desde el RTC
+      ds1307_get_date( test_rtc.dia,  test_rtc.mes,  test_rtc.an, test_rtc.an );
+      ds1307_get_time( test_rtc.hora, test_rtc.minu, test_rtc.segu );
+
+
+      // Verifica que la lectura desde el RTC sea correcta, 
+      //  caso contrario ????
+
+      if( test_rtc.hora < 24 && test_rtc.minu < 60 && test_rtc.segu < 60 &&
+          test_rtc.dia  < 32 && test_rtc.mes < 13 )
+      {
+         _rtc_ok = 1;   //Hora correcta desde RTC!!!
+
+         fprintf(COM_EXT, "\r\n HORA DESDE RTC \r\n");
+      
+         fprintf(COM_EXT, "\r\n HORA: %02d:%02d:%02d \r\n", 
+                                        test_rtc.hora, test_rtc.minu, test_rtc.segu );
+         fprintf(COM_EXT,     " FECHA: 20%02d:%02d:%02d \r\n", 
+                                        test_rtc.an, test_rtc.mes, test_rtc.dia );
+
+         rtc = test_rtc;  // Igualar la hora del micro a la hora del RTC
+
+         // Igualar al reloj del Micro desde el RTC  Esta es la hora que se envia con las tramas
+         _an  = rtc.an;    _mes = rtc.mes;   _dia = rtc.dia;
+         _seg = rtc.segu;  _min = rtc.minu; _hora = rtc.hora;
+      
+      }else{
+      
+         fprintf(COM_EXT, "\r\n LECTURA INCORRECTA DESDE RTC \r\n");
+         fprintf(COM_EXT, "\r\n HORA RTC : %02d:%02d:%02d \r\n", 
+                                        test_rtc.hora, test_rtc.minu, test_rtc.segu );
+
+         fprintf(COM_EXT, "\r\n FECHA RTC : 20%02d:%02d:%02d \r\n", 
+                                        test_rtc.an, test_rtc.mes, test_rtc.dia );
+
+         // La fecha la toma de la EEPROM, esperando que no haya pasado mas de un dia
+         // desde la ultima trama GPS.
+         _an  = read_eeprom(0x10);  _mes = read_eeprom(0x11);  _dia = read_eeprom(0x12);
+
+         // La hora inicia en 01:02:03 seg, valor arbitrario pero que puede servir para
+         // recuperar la informacion de estas tramas.
+         _hora = 01;   _min = 02; _seg = 03;
+
+      }
+   }
 
    while(1)
    {
-      
+      restart_wdt();
       
       // Capturar Trama GPS
       if ( bufferSerial[ i_serial - 2 ] == '\r' &&
@@ -376,7 +481,7 @@ void main(void)
                               }
 
                               // Comprueba que la hora sea la adecuada
-                              if (_hora < 23 && _min < 60 && _seg < 60)
+                              if (_hora < 24 && _min < 60 && _seg < 60)
                               {
                                  rtc.hora = _hora;
                                  rtc.minu = _min;
@@ -401,6 +506,12 @@ void main(void)
                            reloj = rtc;             //Iguala la hora del PIC a la hora del GPS
                            igualar_rtc( rtc );     // Iguala el RTC a la hora del GPS
 
+                           
+                           //Guardar la FECHA EEPROM
+                           write_eeprom( 0x10, _an );
+                           write_eeprom( 0x11, _mes );
+                           write_eeprom( 0x12, _dia );
+
                            fprintf(COM_EXT, "\r\n HORA:  %02d:%02d:%02d\r\n",
                                                        _hora,_min,_seg );
 
@@ -419,7 +530,6 @@ void main(void)
 
          }
 
-
          // Limpiar el Buffer
          for (j = 0; j < BUFF_SER_0; ++j)
             bufferSerial[ j ] = 0x00;
@@ -436,13 +546,11 @@ void main(void)
          // output_high( LED_STATUS );  Se enciende en la interrupcion serial
          _enviar_trama = 0;
 
-         ds1307_get_date( reloj.dia,  reloj.mes,  reloj.an, reloj.an );
-         ds1307_get_time( reloj.hora, reloj.minu, reloj.segu );
-
+         
          fprintf(COM_UART,"AT$MSGSND=4,\"");
-         fprintf(COM_UART, "#PT02,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r"
-                                   reloj.an, reloj.mes, reloj.dia, 
-                                             reloj.hora, reloj.minu, reloj.segu, 
+         fprintf(COM_UART, "#%s,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r",
+                           ID_Estacion, _an, _mes, _dia, 
+                                             _hora, _min, _seg, 
                                                 valor_AN0,valor_AN1,valor_AN2,valor_AN3,valor_AN4,valor_AN5);
 
          
