@@ -3,20 +3,17 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.5.3                       *
+ *  version:      3.5.4                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
  *
  *                                        
  *  + Programacion para SKYPATROL tt8750+   
- *                                               
  *  + Se define a traves de un #DEFINE                                                   
  *
- *  IMPORTANTE: El tiempo de pregunta de GPS no debe ser multiplo
- *  del tiempo de envio de Sensores!!!!                                 
- *
- *                                    
+ *  + Si cambia la estacion se debe cambiar el
+ *    string y volver a compilar       
  *                                                
  *                                                   
  *
@@ -25,7 +22,7 @@
 
 #include <18f452.h>
 #device  ADC=10
-#fuses   HS, NOWDT,NOLVP, NOPUT, NOPROTECT
+#fuses   HS,NOLVP, NOPUT, NOPROTECT, WDT128
 #use     delay(clock=20M)
 #include "ds1307.c"
 #use RS232(BAUD=9600, UART1, PARITY= N, STREAM = COM_UART )
@@ -60,7 +57,7 @@
 
    char  bufferSerial[ BUFF_SER_0 ];                                // Buffer Serial para UART0
 
-   char ID_Estacion[] = { 'P', 'T', '0', '1', 0x00 };   // Por defecto es la 01
+   char ID_Estacion[] = { 'P', 'T', '0', '2', 0x00 };   // Por defecto es la 01
 
    volatile unsigned int i_serial = 0;
    volatile unsigned int i_timer  = 2;
@@ -129,6 +126,7 @@
 
    Tiempo rtc;
    Tiempo reloj;
+   Tiempo test_rtc;
 
    // Variables para alojar las lecturas de los pines analogicos
    long valor_AN0 = 0;
@@ -192,22 +190,13 @@ void ISR_RTCC(void)
 
    //fprintf(COM_EXT, "%Lu\r\n", _segundos );
 
-   if ( _segundos_gps == SEG_GPS )
-   {
-      _segundos_gps = 0;
-
-      //Peticion de Trama GPS para igualar el RTC
-      
-      #ifdef TT8750_PLUS
-         fprintf(COM_UART, "AT$TTGPSQRY=10,0\n\r");
-      #else
-         fprintf(COM_UART, "AT$GPSRD=10\r\n");
-      #endif
-   }
-
    if ( _segundos_daq == SEG_DAQ )
    {
       output_high( LED_STATUS );
+
+      if ( _segundos_gps == SEG_GPS )        // Puede ocurrir una colision en el puerto serial
+         _segundos_gps -= 2;                //  Retrasa un par de segundos la peticion de GPS
+      
       _segundos_daq = 0;   // Reiniciar contador de segundos para adquisicion
 
       // Actualizar las variables y levantar la bandera para iniciar 
@@ -239,6 +228,26 @@ void ISR_RTCC(void)
       _enviar_trama = 1;
    }
 
+   if ( _segundos_gps == SEG_GPS )
+   {
+      _segundos_gps = 0;
+
+      //Peticion de Trama GPS para igualar el RTC
+      
+      #ifdef TT8750_PLUS
+         fprintf(COM_UART, "AT$TTGPSQRY=10,0\n\r");
+      #else
+         fprintf(COM_UART, "AT$GPSRD=10\r\n");
+      #endif
+   }
+
+   // ************    REINICIO DEL MICROCONTROLADOR   ************
+
+   if ( _segundos == 120 )   // El microncontrlador se resetea cada 18.22 horas
+   {
+      delay_ms( 700 );      // Mientras esta en el Delay no refresca WDT
+   }                       //  lo cual provoca un reinicio
+   
 }
 
 
@@ -264,7 +273,7 @@ void main(void)
    fprintf( COM_EXT, "\n\r *****************************************" );
    fprintf( COM_EXT, "\n\r    KRADAC Robotics  |  Loja - Ecuador" );
    fprintf( COM_EXT, "\n\r     www.kradac.com  |  Cel: 0991898859" );
-   fprintf( COM_EXT, "\n\r             version:  3.3\n\r\n\r" );
+   fprintf( COM_EXT, "\n\r             version:  3.5.4\n\r\n\r" );
 
 
    // Iguala la hora del PIC con la Hora desde el RTC
@@ -273,7 +282,7 @@ void main(void)
 
    while(1)
    {
-      
+      restart_wdt();
       
       // Capturar Trama GPS
       if ( bufferSerial[ i_serial - 2 ] == '\r' &&

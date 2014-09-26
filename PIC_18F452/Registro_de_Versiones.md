@@ -1,5 +1,20 @@
 Registro de cambios:
 
+Pendientes:
+* Identificar si es SkyPatrol+ o anterior
+* Habilitar grabar datos en USB
+
+
+25-09-2014
+version 3.5.4
+
+- Detecta si el tiempo de GPS y de MSG son los mismos y le resta dos segundos a la consulta GPS para
+  evitar la colision del bus serial. El compilador apaga las interrupciones mientras esta en PRINTF 
+  para evitar colgarse, por eso no puede enviar y recibir al mismo tiempo!
+
+- Consulta el RTC una vez al encenderse el PIC, luego lleva internamente el tiempo. Se estan presen-
+  tando problemas al momento de leer desde el RTC, da valores de fecha y/o hora incorrectas.
+
 
 25-09-2014
 version 3.5.3
