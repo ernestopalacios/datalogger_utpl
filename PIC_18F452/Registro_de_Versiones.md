@@ -11,6 +11,16 @@ Observaciones:
 
 
 
+--------------------------            25-09-2014         -------------------------------------------
+version 3.5.5
+
+- Mejorada la deteccion de colision entre GPS y MSG.
+
+- Si no recibe una trama serial desde el SkyPatrol por mas de 60 segundos resetea el micro por WDT
+
+- Añadida la funcion de envio por SKYPATROL TT8750+. para que funcione se debe compilar con la ban-
+  dera  #define TT8750_PLUS
+
 
 --------------------------            25-09-2014         -------------------------------------------
 version 3.5.4

@@ -3,7 +3,7 @@
  *                                            *
  *  Proyecto:     Sensor  UTPL                *
  *  Programador:  Hugo Ramirez  & Ernesto P   *
- *  version:      3.5.4                       *
+ *  version:      3.5.5                       *
  *  Fecha:        10/06/2014                  *
  *                                            *
  **********************************************
@@ -38,6 +38,9 @@
 //
 // En caso de que se desee trabajar con el Skypatrol Anterior se debe
 // comentar la siguiente linea y volver a compilar!
+
+
+// #define TT8750_PLUS 
 #define TT8750
 
 /////////////////////*******         DEFINICION DE CONSTANTES        *******////////////////////////////////////////
@@ -73,6 +76,7 @@
    unsigned long _segundos_wdt = 0;
    unsigned long _segundos_daq = 0;
    unsigned long _segundos_gps = 0;
+   unsigned int  wdt_serial   = 0;
 
    // Tiempo desde el GPS
    char c_hora1  = 0;
@@ -144,6 +148,7 @@
          bufferSerial[ i_serial++ ] = c_serial;
 
          fputc( c_serial, COM_EXT);
+         wdt_serial = 0; //resetea el contador de wdt_serial
 
          if( i_serial > BUFF_SER_0 )
          {
@@ -175,8 +180,8 @@ void ISR_RTCC(void)
 
    _segundos_wdt++;      // WDT
    _segundos_daq++;
-   _segundos_gps++;
    _seg++;           //Tiempo del micro
+   wdt_serial++;    // Cuenta los segundos desde la ultima trama serial
 
    //fprintf(COM_EXT, "%Lu\r\n", _segundos_wdt );
 
@@ -184,8 +189,10 @@ void ISR_RTCC(void)
    {
       output_high( LED_STATUS );
 
-      if ( _segundos_gps == SEG_GPS )        // Puede ocurrir una colision en el puerto serial
-         _segundos_gps -= 2;                //  Retrasa un par de segundos la peticion de GPS
+      if ( _seg == SEG_GPS )        // Puede ocurrir una colision en el puerto serial
+         _segundos_gps = 2;        //  Retrasa un par de segundos la peticion de GPS
+      else
+         _segundos_gps = 0;
       
       _segundos_daq = 0;   // Reiniciar contador de segundos para adquisicion
 
@@ -218,7 +225,7 @@ void ISR_RTCC(void)
       _enviar_trama = 1;
    }
 
-   if ( _seg == SEG_GPS )
+   if ( _seg == (SEG_GPS + _segundos_gps) )
    {
       _segundos_gps = 0; // Legacy
 
@@ -256,9 +263,10 @@ void ISR_RTCC(void)
 
 
    /* ************    REINICIO DEL MICROCONTROLADOR   ************  */
-   // El microncontrlador se resetea cada todos los días a las 03:06:13
+   // El microcontrolador se resetea cada todos los días a las 03:06:13
+   // El microcontrolador se resetea si no recibe tramas seriales del SkyPatrol por 60 segundos
 
-   if ( _hora == RST_HORA && _min == RST_MINU && _seg == RST_SEGU )   
+   if ( (_hora == RST_HORA && _min == RST_MINU && _seg == RST_SEGU ) || wdt_serial > 60 )   
    {
       
       write_eeprom( 0x20, 1 ); //Bandera WDT
@@ -301,7 +309,7 @@ void main(void)
    fprintf( COM_EXT, "\n\r *****************************************" );
    fprintf( COM_EXT, "\n\r    KRADAC Robotics  |  Loja - Ecuador" );
    fprintf( COM_EXT, "\n\r     www.kradac.com  |  Cel: 0991898859" );
-   fprintf( COM_EXT, "\n\r             version:  3.5.4\n\r\n\r" );
+   fprintf( COM_EXT, "\n\r             version:  3.5.5\n\r\n\r" );
 
 
 
@@ -546,8 +554,13 @@ void main(void)
          // output_high( LED_STATUS );  Se enciende en la interrupcion serial
          _enviar_trama = 0;
 
+
+         #ifdef TT8750_PLUS
+            fprintf(COM_UART,"AT$TTSNDMG=4,\"");
+         #else
+            fprintf(COM_UART,"AT$MSGSND=4,\"");
+         #endif
          
-         fprintf(COM_UART,"AT$MSGSND=4,\"");
          fprintf(COM_UART, "#%s,20%d%02d%02d,%02d%02d%02d,%Lu,%Lu,%Lu,%Lu,%Lu,%Lu,000,100$\"\n\r",
                            ID_Estacion, _an, _mes, _dia, 
                                              _hora, _min, _seg, 
