@@ -12,6 +12,7 @@ Observaciones:
 
 
 --------------------------            25-09-2014         -------------------------------------------
+
 version 3.5.5
 
 - Mejorada la deteccion de colision entre GPS y MSG.
@@ -23,9 +24,11 @@ version 3.5.5
 
 
 --------------------------            25-09-2014         -------------------------------------------
+
 version 3.5.4
 
-- WDT Habilitado: 
+- WDT Habilitado:
+  
   Si se cuelga el micro lo reinica 512ms. Resetea a propósito el PIC a una hora determinada del dia.
   (se configura al momento de compilar)   cuando resetea desde WDT, guarda la hora en EEPROM para no
   perder el reloj del pic.
@@ -48,6 +51,7 @@ version 3.5.4
 
 
 ---------------------------------      25-09-2014          ------------------------------------------
+
 version 3.5.3
 
 - Se encontro que si se hace la petición de trama GPS (AT$GPSRD=10) y se envia un comando en el mismo
